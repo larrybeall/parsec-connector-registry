@@ -16,6 +16,7 @@ class Servers extends Migration
             $table->increments('id');
             $table->string('client_key', 128);
             $table->string('server_identity', 128);
+            $table->string('locator_packet');
             $table->timestamps();
         });
     }

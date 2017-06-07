@@ -13,5 +13,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Server extends Model
 {
-    protected $fillable = ['client_key', 'server_key'];
+    protected $fillable = ['client_key', 'server_key', 'locator_packet'];
 }
