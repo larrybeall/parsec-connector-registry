@@ -14,7 +14,7 @@ class Clients extends Migration
     {
         Schema::create('clients', function(Blueprint $table) {
             $table->increments('id');
-            $table->string('client_key', 128);
+            $table->string('client_key', 128)->unique();
             $table->timestamps();
         });
     }

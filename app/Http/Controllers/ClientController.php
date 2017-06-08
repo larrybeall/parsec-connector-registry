@@ -18,14 +18,12 @@ class ClientController extends Controller
     {
         $client_key = $request->json()->get('client_key');
 
-        if(strlen($client_key) !== 128)
+        if($this->isHashValid($client_key) === false)
         {
             return $this->invalidKeyLengthResponse(['message' => 'Invalid client key length']);
         }
 
-        $client = Client::where('client_key', $client_key)->first();
-
-        if($client)
+        if(Client::exists($client_key))
         {
             return $this->alreadyExistsResponse(['message' => 'Client with this key already exists']);
         }
@@ -37,10 +35,10 @@ class ClientController extends Controller
 
     public function exists(Request $request)
     {
-        $client_key = $request->json()->get('client_ke');
-        $client = Client::where('client_key', $client_key)->first();
+        $client_key = $request->json()->get('client_key');
+        $client = Client::exists($client_key);
 
-        return ($client)
+        return ($client === true)
             ? $this->contentSuccessResponse(['message' => 'Client exists'])
             : $this->itemNotFoundResponse(['message' => 'Client does not exist']);
     }

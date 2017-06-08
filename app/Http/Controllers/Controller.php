@@ -6,6 +6,11 @@ use Laravel\Lumen\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
+    protected function isHashValid($hash)
+    {
+        return strlen($hash) === 128;
+    }
+
     protected function alreadyExistsResponse(array $content)
     {
         return $this->sendJsonResponse($content, 409, false);
@@ -29,6 +34,11 @@ class Controller extends BaseController
     protected function itemNotFoundResponse(array $content)
     {
         return $this->sendJsonResponse($content, 404, false);
+    }
+
+    protected function itemUpdateFailedResponse(array $content)
+    {
+        return $this->sendJsonResponse($content, 400, false);
     }
 
     private function sendJsonResponse(array $content, $code, $success = true)

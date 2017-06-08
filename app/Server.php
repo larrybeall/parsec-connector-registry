@@ -13,5 +13,26 @@ use Illuminate\Database\Eloquent\Model;
 
 class Server extends Model
 {
-    protected $fillable = ['client_key', 'server_key', 'locator_packet'];
+    protected $fillable = [
+        'client_key',
+        'server_identity',
+        'heartbeat',
+        'locator_packet',
+        'locator_packet_updated',
+        'created_at'
+    ];
+
+    public static function exists($client_key, $identity)
+    {
+        $server = self::where('client_key', $client_key)
+            ->where('server_identity', $identity)
+            ->first();
+
+        if(!$server)
+        {
+            return false;
+        }
+
+        return true;
+    }
 }
