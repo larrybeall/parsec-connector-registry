@@ -18,8 +18,8 @@ class ServerController extends Controller
 {
     public function register(Request $request)
     {
-        $client_key = $request->json->get('client_key');
-        $server_identity = $request->json->get('identity');
+        $client_key = $request->json()->get('client_key');
+        $server_identity = $request->json()->get('identity');
 
         if($this->isHashValid($client_key) === false)
         {
@@ -41,7 +41,7 @@ class ServerController extends Controller
             $this->alreadyExistsResponse(['message' => 'Server entry already exists']);
         }
 
-        $locator_packet  = $request->json->get('locator_packet');
+        $locator_packet  = $request->json()->get('locator_packet');
 
         $time = new Carbon();
 
@@ -59,10 +59,10 @@ class ServerController extends Controller
 
     public function beat(Request $request)
     {
-        $client_key = $request->json->get('client_key');
-        $server_identity = $request->json->get('identity');
-        $locator_packet  = $request->json->get('locator_packet');
-        $old_identity = $request->json->get('old_identity');
+        $client_key = $request->json()->get('client_key');
+        $server_identity = $request->json()->get('identity');
+        $locator_packet  = $request->json()->get('locator_packet');
+        $old_identity = $request->json()->get('old_identity');
 
         $time = new Carbon();
 
@@ -100,9 +100,9 @@ class ServerController extends Controller
 
     public function getList(Request $request)
     {
-        $client_key = $request->json->get('client_key');
-        $last_request = $request->json->get('last_request');
-        $force_packet = $request->json->get('force_packet');
+        $client_key = $request->json()->get('client_key');
+        $last_request = $request->json()->get('last_request');
+        $force_packet = $request->json()->get('force_packet');
         $last_request_time = ($last_request) ? new Carbon($last_request) : Carbon::now();
 
         if(Client::exists($client_key) === false)
@@ -135,8 +135,8 @@ class ServerController extends Controller
 
     public function exists(Request $request)
     {
-        $client_key = $request->json->get('client_key');
-        $server_identity = $request->json->get('identity');
+        $client_key = $request->json()->get('client_key');
+        $server_identity = $request->json()->get('identity');
 
         $exists = Server::exists($client_key, $server_identity);
 

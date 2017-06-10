@@ -16,7 +16,7 @@ class ClientController extends Controller
 {
     public function register(Request $request)
     {
-        $client_key = $request->json->get('client_key');
+        $client_key = $request->json()->get('client_key');
 
         if($this->isHashValid($client_key) === false)
         {
@@ -35,7 +35,7 @@ class ClientController extends Controller
 
     public function exists(Request $request)
     {
-        $client_key = $request->json->get('client_key');
+        $client_key = $request->json()->get('client_key');
         $client = Client::exists($client_key);
 
         return ($client === true)

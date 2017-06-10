@@ -9,7 +9,7 @@ class Controller extends BaseController
 {
     public function test(Request $request)
     {
-        $json = $request->json->all();
+        $json = $request->json()->all();
         return $this->contentSuccessResponse($json);
     }
 
