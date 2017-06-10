@@ -20,6 +20,7 @@ $app->get('/', function () use ($app) {
 $app->group(['prefix' => 'registry/client/'], function (Application $app) {
     $app->post('exists', 'ClientController@exists');
     $app->post('register', 'ClientController@register');
+    $app->get('/', $app->version());
 });
 
 $app->group(['prefix' => 'registry/server/'], function (Application $app) {
@@ -27,4 +28,5 @@ $app->group(['prefix' => 'registry/server/'], function (Application $app) {
     $app->post('beat', 'ServerController@beat');
     $app->post('list', 'ServerController@getList');
     $app->post('exists', 'ServerController@exists');
+    $app->get('/', $app->version());
 });
