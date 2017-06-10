@@ -70,7 +70,7 @@ class ServerController extends Controller
         if($locator_packet)
         {
             $toUpdate['locator_packet'] = $locator_packet;
-            $toUpdate['locator_packet_updated'] => $time;
+            $toUpdate['locator_packet_updated'] = $time;
         }
 
         $server = Server::where('client_key', $client_key)
@@ -86,7 +86,7 @@ class ServerController extends Controller
 
         if($result)
         {
-            return $this->contentSuccessResponse(['message'] => 'Server updated');
+            return $this->contentSuccessResponse(['message' => 'Server updated']);
         }
 
         return $this->itemUpdateFailedResponse(['message' => 'Failed to update server']);
@@ -95,6 +95,9 @@ class ServerController extends Controller
     public function getList(Request $request)
     {
         $client_key = $request->json()->get('client_key');
+        $last_request = $request->json()->get('last_request');
+        $force_packet = $request->json()->get('force_packet');
+        $last_request_time = ($last_request) ? new Carbon($last_request) : Carbon::now();
 
         if(Client::exists($client_key) === false)
         {
@@ -103,7 +106,25 @@ class ServerController extends Controller
 
         $servers = Server::where('client_key', $client_key)->get();
 
-        
+        $response = ['request_time' => Carbon::now(), 'servers' => []];
+
+        foreach ($servers as $server) {
+            $last_heartbeat = new Carbon($server->heartbeat);
+            $packet_time = new Carbon($server->locator_packet_updated);
+
+            $online_status = $this->getOnlineStatus($last_heartbeat);
+            $has_new_packet = $force_packet || $this->hasNewPacket($packet_time, $last_request_time);
+
+            $server_info = [
+                'identity' => $server->server_identity,
+                'status' => $online_status,
+                'packet' => ($has_new_packet) ? $server->locator_packet : null
+            ];
+
+            $response['servers'][] = $server_info;
+        }
+
+        return $this->contentSuccessResponse($response);
     }
 
     public function exists(Request $request)
@@ -116,5 +137,27 @@ class ServerController extends Controller
         return ($exists === true)
             ? $this->contentSuccessResponse(['message' => 'Server exists'])
             : $this->itemNotFoundResponse(['message' => 'Server does not exist']);
+    }
+
+    private function getOnlineStatus($heartbeat)
+    {
+        $time_since_last = Carbon::now()->diffInMinutes($heartbeat);
+
+        if($time_since_last <= 5)
+        {
+            return 'online';
+        }
+
+        if($time_since_last <= 10)
+        {
+            return 'recent';
+        }
+
+        return 'offline';
+    }
+
+    private function hasNewPacket(Carbon $packet_time, Carbon $last_request)
+    {
+        return $packet_time->gte($last_request);
     }
 }
