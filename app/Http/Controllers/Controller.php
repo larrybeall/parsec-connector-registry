@@ -6,6 +6,11 @@ use Laravel\Lumen\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
+    public function test()
+    {
+        return $this->contentSuccessResponse(['message' => 'it worked']);
+    }
+
     protected function isHashValid($hash)
     {
         return strlen($hash) === 128;

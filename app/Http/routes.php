@@ -17,16 +17,18 @@ $app->get('/', function () use ($app) {
     return $app->version();
 });
 
-$app->group(['prefix' => 'registry/client/'], function (Application $app) {
+$app->group(['prefix' => 'registry/client/'], function() use ($app) {
     $app->post('exists', 'ClientController@exists');
     $app->post('register', 'ClientController@register');
-    $app->get('/', $app->version());
+    $app->get('/', function() use ($app) { return $app->version(); });
+    $app->post('test', 'ClientController@test');
 });
 
-$app->group(['prefix' => 'registry/server/'], function (Application $app) {
+$app->group(['prefix' => 'registry/server/'], function() use  ($app) {
     $app->post('register', 'ServerController@register');
     $app->post('beat', 'ServerController@beat');
     $app->post('list', 'ServerController@getList');
     $app->post('exists', 'ServerController@exists');
-    $app->get('/', $app->version());
+    $app->get('/', function() use ($app) { return $app->version(); });
+    $app->post('test', 'ServerController@test');
 });
