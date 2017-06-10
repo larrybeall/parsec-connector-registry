@@ -17,7 +17,7 @@ $app->get('/', function () use ($app) {
     return $app->version();
 });
 
-$app->group(['prefix' => 'registry/client/'], function() use ($app) {
+$app->group(['prefix' => 'registry/client/', 'namespace' => $this->namespace], function() use ($app) {
     $app->post('exists', 'ClientController@exists');
     $app->post('register', 'ClientController@register');
     $app->get('/', function() use ($app) { return $app->version(); });
