@@ -24,7 +24,7 @@ $app->group(['prefix' => 'registry/client/', 'namespace' => 'App\Http\Controller
     $app->post('test', 'ClientController@test');
 });
 
-$app->group(['prefix' => 'registry/server/'], function() use  ($app) {
+$app->group(['prefix' => 'registry/server/', 'namespace' => 'App\Http\Controllers'], function() use  ($app) {
     $app->post('register', 'ServerController@register');
     $app->post('beat', 'ServerController@beat');
     $app->post('list', 'ServerController@getList');

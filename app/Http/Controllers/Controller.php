@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Laravel\Lumen\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
-    public function test()
+    public function test(Request $request)
     {
-        return $this->contentSuccessResponse(['message' => 'it worked']);
+        $json = $request->json()->all();
+        return $this->contentSuccessResponse($json);
     }
 
     protected function isHashValid($hash)
