@@ -11,6 +11,20 @@
 |
 */
 
+use \Laravel\Lumen\Application;
+
 $app->get('/', function () use ($app) {
     return $app->version();
+});
+
+$app->group(['prefix' => 'registry/client/'], function (Application $app) {
+    $app->post('exists', 'ClientController@exists');
+    $app->post('register', 'ClientController@register');
+});
+
+$app->group(['prefix' => 'registry/server/'], function (Application $app) {
+    $app->post('register', 'ServerController@register');
+    $app->post('beat', 'ServerController@beat');
+    $app->post('list', 'ServerController@getList');
+    $app->post('exists', 'ServerController@exists');
 });

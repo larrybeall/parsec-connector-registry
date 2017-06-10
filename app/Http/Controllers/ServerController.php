@@ -62,6 +62,7 @@ class ServerController extends Controller
         $client_key = $request->json()->get('client_key');
         $server_identity = $request->json()->get('identity');
         $locator_packet  = $request->json()->get('locator_packet');
+        $old_identity = $request->json()->get('old_identity');
 
         $time = new Carbon();
 
@@ -73,8 +74,13 @@ class ServerController extends Controller
             $toUpdate['locator_packet_updated'] = $time;
         }
 
+        if($old_identity)
+        {
+            $toUpdate['server_identity'] = $server_identity;
+        }
+
         $server = Server::where('client_key', $client_key)
-            ->where('server_identity', $server_identity)
+            ->where('server_identity', ($old_identity) ? $old_identity : $server_identity)
             ->first();
 
         if(!$server)
